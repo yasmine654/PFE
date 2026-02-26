@@ -3,6 +3,7 @@ from sqlalchemy import (
     ForeignKey, CheckConstraint, Index
 )
 from sqlalchemy.sql import expression
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class VM(Base):
@@ -46,3 +47,14 @@ class VM(Base):
         Index("idx_vm_tenant", "tenant_id"),
         Index("idx_vm_subnet", "subnet_id"),
     )
+
+    tenant = relationship("Tenant", back_populates="vms")
+    provider = relationship("Provider", back_populates="vms")
+    region = relationship("Region", back_populates="vms")
+    availability_zone = relationship("AvailabilityZone", back_populates="vms")
+
+    subnet = relationship("Subnet", back_populates="vms")
+    vpc = relationship("VPC", back_populates="vms")
+
+    volumes = relationship("Volume", back_populates="vm")
+    security_groups = relationship("SecurityGroup", back_populates="vm")

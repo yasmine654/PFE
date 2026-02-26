@@ -2,6 +2,7 @@ from sqlalchemy import (
     Column, Integer, String,
     ForeignKey, UniqueConstraint, Index
 )
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class Subnet(Base):
@@ -27,3 +28,12 @@ class Subnet(Base):
         UniqueConstraint("cidr", "vpc_id", name="unique_subnet_cidr_per_vpc"),
         Index("idx_subnet_vpc", "vpc_id"),
     )
+
+    vpc = relationship("VPC", back_populates="subnets")
+    availability_zone = relationship("AvailabilityZone", back_populates="subnets")
+
+    vms = relationship("VM", back_populates="subnet")
+    acls = relationship("ACL", back_populates="subnet", cascade="all, delete")
+    load_balancers = relationship("LoadBalancer", back_populates="subnet")
+    vpn_gateways = relationship("VPNGateway", back_populates="subnet")
+    wafs = relationship("WAF", back_populates="subnet")

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Index
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class AvailabilityZone(Base):
@@ -15,3 +16,7 @@ class AvailabilityZone(Base):
     __table_args__ = (
         Index("idx_az_region", "region_id"),
     )
+
+    region = relationship("Region", back_populates="availability_zones")
+    subnets = relationship("Subnet", back_populates="availability_zone")
+    vms = relationship("VM", back_populates="availability_zone")

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, CheckConstraint
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class Tenant(Base):
@@ -22,3 +23,13 @@ class Tenant(Base):
             name="check_billing_type"
         ),
     )
+
+    accounts = relationship("Account", back_populates="tenant", cascade="all, delete")
+    vpcs = relationship("VPC", back_populates="tenant")
+    vms = relationship("VM", back_populates="tenant")
+    vpn_gateways = relationship("VPNGateway", back_populates="tenant")
+    elastic_ips = relationship("ElasticIP", back_populates="tenant")
+    vpc_peerings = relationship("VPCPeering", back_populates="tenant")
+
+
+    

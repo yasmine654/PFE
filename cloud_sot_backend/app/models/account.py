@@ -2,6 +2,7 @@ from sqlalchemy import (
     Column, Integer, String,
     ForeignKey, UniqueConstraint, Index
 )
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class Account(Base):
@@ -33,3 +34,6 @@ class Account(Base):
         Index("idx_account_tenant", "tenant_id"),
         Index("idx_account_provider", "provider_id"),
     )
+
+    tenant = relationship("Tenant", back_populates="accounts")
+    provider = relationship("Provider", back_populates="accounts")
