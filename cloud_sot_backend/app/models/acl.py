@@ -3,6 +3,7 @@ from sqlalchemy import (
     ForeignKey, CheckConstraint
 )
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class ACL(Base):
     __tablename__ = "acl"
@@ -35,3 +36,5 @@ class ACL(Base):
             name="check_acl_ports"
         ),
     )
+
+    subnet = relationship("Subnet", back_populates="acls")

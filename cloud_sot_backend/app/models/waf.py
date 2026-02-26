@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class WAF(Base):
     __tablename__ = "waf"
@@ -10,3 +11,7 @@ class WAF(Base):
     subnet_id = Column(Integer, ForeignKey("subnet.subnet_id"))
 
     ip_public = Column(String(50))
+
+
+    vpc = relationship("VPC", back_populates="wafs")
+    subnet = relationship("Subnet", back_populates="wafs")

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class ElasticIP(Base):
     __tablename__ = "elastic_ip"
@@ -14,3 +15,7 @@ class ElasticIP(Base):
 
     attached = Column(Boolean, server_default="false")
     attached_to = Column(String(100))
+
+    tenant = relationship("Tenant", back_populates="elastic_ips")
+    provider = relationship("Provider", back_populates="elastic_ips")
+    region = relationship("Region", back_populates="elastic_ips")

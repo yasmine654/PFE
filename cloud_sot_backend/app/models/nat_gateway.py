@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class NATGateway(Base):
     __tablename__ = "nat_gateway"
@@ -10,3 +11,5 @@ class NATGateway(Base):
 
     snat_rule = Column(Text)
     dnat_rule = Column(Text)
+
+    vpc = relationship("VPC", back_populates="nat_gateways")

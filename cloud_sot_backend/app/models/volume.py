@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, CheckConstraint
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class Volume(Base):
     __tablename__ = "volume"
@@ -20,3 +21,5 @@ class Volume(Base):
         CheckConstraint("size > 0", name="check_volume_size"),
         CheckConstraint("iops >= 0", name="check_volume_iops"),
     )
+
+    from sqlalchemy.orm import relationship

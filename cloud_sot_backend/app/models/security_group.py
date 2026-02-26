@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class SecurityGroup(Base):
     __tablename__ = "security_group"
@@ -25,3 +26,5 @@ class SecurityGroup(Base):
             name="check_sg_port"
         ),
     )
+
+    vm = relationship("VM", back_populates="security_groups")

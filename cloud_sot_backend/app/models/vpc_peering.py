@@ -3,6 +3,7 @@ from sqlalchemy import (
     ForeignKey, CheckConstraint
 )
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class VPCPeering(Base):
     __tablename__ = "vpc_peering"
@@ -23,4 +24,20 @@ class VPCPeering(Base):
             "vpc_source_id <> vpc_target_id",
             name="check_no_self_peering"
         ),
+    )
+
+
+    tenant = relationship("Tenant", back_populates="vpc_peerings")
+    provider = relationship("Provider", back_populates="vpc_peerings")
+
+    vpc_source = relationship(
+        "VPC",
+        foreign_keys=[vpc_source_id],
+        back_populates="peerings_source"
+    )
+
+    vpc_target = relationship(
+        "VPC",
+        foreign_keys=[vpc_target_id],
+        back_populates="peerings_target"
     )

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class VPNGateway(Base):
     __tablename__ = "vpn_gateway"
@@ -22,3 +23,9 @@ class VPNGateway(Base):
             name="check_vpn_type"
         ),
     )
+
+
+    tenant = relationship("Tenant", back_populates="vpn_gateways")
+    provider = relationship("Provider", back_populates="vpn_gateways")
+    vpc = relationship("VPC", back_populates="vpn_gateways")
+    subnet = relationship("Subnet", back_populates="vpn_gateways")

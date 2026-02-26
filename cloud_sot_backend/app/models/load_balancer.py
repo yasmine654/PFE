@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint
 from app.core.database import Base
+from sqlalchemy.orm import relationship
 
 class LoadBalancer(Base):
     __tablename__ = "load_balancer"
@@ -18,3 +19,9 @@ class LoadBalancer(Base):
             name="check_lb_type"
         ),
     )
+
+    vpc = relationship("VPC", back_populates="load_balancers")
+    subnet = relationship("Subnet", back_populates="load_balancers")
+
+
+    
