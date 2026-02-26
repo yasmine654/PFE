@@ -1,0 +1,12 @@
+from sqlalchemy import Column, Integer, Text, ForeignKey
+from app.core.database import Base
+
+class NATGateway(Base):
+    __tablename__ = "nat_gateway"
+
+    nat_id = Column(Integer, primary_key=True)
+
+    vpc_id = Column(Integer, ForeignKey("vpc.vpc_id"))
+
+    snat_rule = Column(Text)
+    dnat_rule = Column(Text)
