@@ -8,6 +8,7 @@ from app.models import (
     volume, security_group, waf,account
 )
 from app.core.database import Base
+from app.api import tenant
 
 app = FastAPI(title="Cloud Source of Truth")
 
@@ -17,3 +18,4 @@ Base.metadata.create_all(bind=engine)
 def root():
     return {"message": "Backend is running 🚀"}
 
+app.include_router(tenant.router)
