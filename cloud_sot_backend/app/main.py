@@ -10,6 +10,7 @@ from app.models import (
 from app.core.database import Base
 from app.api import tenant
 from app.api import provider
+from app.api import account
 
 
 app = FastAPI(title="Cloud Source of Truth")
@@ -22,3 +23,4 @@ def root():
 
 app.include_router(tenant.router)
 app.include_router(provider.router)
+app.include_router(account.router)
