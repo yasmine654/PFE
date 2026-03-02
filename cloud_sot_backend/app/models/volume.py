@@ -1,25 +1,25 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, CheckConstraint
-from app.core.database import Base
+import sqlalchemy
 from sqlalchemy.orm import relationship
+from app.core.database import Base
 
 class Volume(Base):
     __tablename__ = "volume"
 
-    volume_id = Column(Integer, primary_key=True)
+    volume_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
 
-    vm_id = Column(
-        Integer,
-        ForeignKey("vm.vm_id", ondelete="SET NULL")
+    vm_id = sqlalchemy.Column(
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("vm.vm_id", ondelete="SET NULL")
     )
 
-    type = Column(String(50))
-    size = Column(Integer)
-    encrypted = Column(Boolean, server_default="false")
-    iops = Column(Integer)
+    type = sqlalchemy.Column(sqlalchemy.String(50))
+    size = sqlalchemy.Column(sqlalchemy.Integer)
+    encrypted = sqlalchemy.Column(sqlalchemy.Boolean, server_default="false")
+    iops = sqlalchemy.Column(sqlalchemy.Integer)
 
     __table_args__ = (
-        CheckConstraint("size > 0", name="check_volume_size"),
-        CheckConstraint("iops >= 0", name="check_volume_iops"),
+        sqlalchemy.CheckConstraint("size > 0", name="check_volume_size"),
+        sqlalchemy.CheckConstraint("iops >= 0", name="check_volume_iops"),
     )
 
-    from sqlalchemy.orm import relationship
+    vm = relationship("VM", back_populates="volumes")

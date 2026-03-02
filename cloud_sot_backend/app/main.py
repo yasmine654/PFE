@@ -9,6 +9,8 @@ from app.models import (
 )
 from app.core.database import Base
 from app.api import tenant
+from app.api import provider
+
 
 app = FastAPI(title="Cloud Source of Truth")
 
@@ -19,3 +21,4 @@ def root():
     return {"message": "Backend is running 🚀"}
 
 app.include_router(tenant.router)
+app.include_router(provider.router)
