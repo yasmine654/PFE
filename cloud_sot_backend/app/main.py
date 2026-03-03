@@ -14,6 +14,7 @@ from app.api import account
 from app.api import region
 from app.api import vpc
 from app.api import availability_zone
+from app.api import subnet
 
 app = FastAPI(title="Cloud Source of Truth")
 
@@ -29,3 +30,4 @@ app.include_router(account.router)
 app.include_router(region.router)
 app.include_router(vpc.router)
 app.include_router(availability_zone.router)
+app.include_router(subnet.router)
