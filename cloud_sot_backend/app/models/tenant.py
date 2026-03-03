@@ -24,12 +24,41 @@ class Tenant(Base):
         ),
     )
 
-    accounts = relationship("Account", back_populates="tenant", cascade="all, delete")
-    vpcs = relationship("VPC", back_populates="tenant")
-    vms = relationship("VM", back_populates="tenant")
-    vpn_gateways = relationship("VPNGateway", back_populates="tenant")
-    elastic_ips = relationship("ElasticIP", back_populates="tenant")
-    vpc_peerings = relationship("VPCPeering", back_populates="tenant")
+    accounts = relationship(
+        "Account",
+        back_populates="tenant",
+        cascade="all, delete-orphan"
+    )
+
+    vpcs = relationship(
+        "VPC",
+        back_populates="tenant",
+        cascade="all, delete-orphan"
+    )
+
+    vms = relationship(
+        "VM",
+        back_populates="tenant",
+        cascade="all, delete-orphan"
+    )
+
+    vpn_gateways = relationship(
+        "VPNGateway",
+        back_populates="tenant",
+        cascade="all, delete-orphan"
+    )
+
+    elastic_ips = relationship(
+        "ElasticIP",
+        back_populates="tenant",
+        cascade="all, delete-orphan"
+    )
+
+    vpc_peerings = relationship(
+        "VPCPeering",
+        back_populates="tenant",
+        cascade="all, delete-orphan"
+    )
 
 
     

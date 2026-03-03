@@ -18,5 +18,15 @@ class AvailabilityZone(Base):
     )
 
     region = relationship("Region", back_populates="availability_zones")
-    subnets = relationship("Subnet", back_populates="availability_zone")
-    vms = relationship("VM", back_populates="availability_zone")
+
+    subnets = relationship(
+        "Subnet",
+        back_populates="availability_zone",
+        cascade="all, delete-orphan"
+    )
+
+    vms = relationship(
+        "VM",
+        back_populates="availability_zone",
+        cascade="all, delete-orphan"
+    )

@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 
 from app.core.database import get_db
 from app.schemas.tenant import TenantCreate, TenantResponse, TenantUpdate
 from app.crud import tenant as crud_tenant
 from app.models.tenant import Tenant
-from app.models.account import Account
 
 router = APIRouter(prefix="/tenants", tags=["Tenants"])
 
@@ -35,6 +33,7 @@ def read_tenant(tenant_id: int, db: Session = Depends(get_db)):
 # 🔒 DELETE NORMAL (bloqué si dépendances)
 @router.delete("/{tenant_id}")
 def delete_tenant(tenant_id: int, db: Session = Depends(get_db)):
+
     tenant_obj = db.query(Tenant).filter(
         Tenant.tenant_id == tenant_id
     ).first()
@@ -42,10 +41,18 @@ def delete_tenant(tenant_id: int, db: Session = Depends(get_db)):
     if not tenant_obj:
         raise HTTPException(status_code=404, detail="Tenant not found")
 
-    if tenant_obj.accounts:
+    # 🔒 Vérification via ORM
+    if (
+        tenant_obj.accounts
+        or tenant_obj.vpcs
+        or tenant_obj.vms
+        or tenant_obj.vpn_gateways
+        or tenant_obj.elastic_ips
+        or tenant_obj.vpc_peerings
+    ):
         raise HTTPException(
             status_code=400,
-            detail="Cannot delete tenant with existing accounts. Use /force endpoint."
+            detail="Cannot delete tenant with existing dependencies. Use /force."
         )
 
     db.delete(tenant_obj)
@@ -54,9 +61,10 @@ def delete_tenant(tenant_id: int, db: Session = Depends(get_db)):
     return {"message": "Tenant deleted"}
 
 
-# 💣 DELETE FORCÉ
+# 💣 DELETE FORCÉ (ORM cascade supprime toute la hiérarchie)
 @router.delete("/{tenant_id}/force")
 def force_delete_tenant(tenant_id: int, db: Session = Depends(get_db)):
+
     tenant_obj = db.query(Tenant).filter(
         Tenant.tenant_id == tenant_id
     ).first()
@@ -64,21 +72,8 @@ def force_delete_tenant(tenant_id: int, db: Session = Depends(get_db)):
     if not tenant_obj:
         raise HTTPException(status_code=404, detail="Tenant not found")
 
-    try:
-        # 🔥 supprimer les accounts liés
-        db.query(Account).filter(
-            Account.tenant_id == tenant_id
-        ).delete()
-
-        db.delete(tenant_obj)
-        db.commit()
-
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail="Tenant still has other dependencies."
-        )
+    db.delete(tenant_obj)   # 🔥 cascade ORM fait tout
+    db.commit()
 
     return {"message": "Tenant force deleted"}
 

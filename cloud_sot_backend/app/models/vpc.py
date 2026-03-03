@@ -28,20 +28,50 @@ class VPC(Base):
     provider = relationship("Provider", back_populates="vpcs")
     region = relationship("Region", back_populates="vpcs")
 
-    subnets = relationship("Subnet", back_populates="vpc", cascade="all, delete")
-    vms = relationship("VM", back_populates="vpc")
+    subnets = relationship(
+        "Subnet",
+        back_populates="vpc",
+        cascade="all, delete-orphan"
+    )
 
-    nat_gateways = relationship("NATGateway", back_populates="vpc")
-    load_balancers = relationship("LoadBalancer", back_populates="vpc")
-    vpn_gateways = relationship("VPNGateway", back_populates="vpc")
-    wafs = relationship("WAF", back_populates="vpc")
+    vms = relationship(
+        "VM",
+        back_populates="vpc",
+        cascade="all, delete-orphan"
+    )
+
+    nat_gateways = relationship(
+        "NATGateway",
+        back_populates="vpc",
+        cascade="all, delete-orphan"
+    )
+
+    load_balancers = relationship(
+        "LoadBalancer",
+        back_populates="vpc",
+        cascade="all, delete-orphan"
+    )
+
+    vpn_gateways = relationship(
+        "VPNGateway",
+        back_populates="vpc",
+        cascade="all, delete-orphan"
+    )
+
+    wafs = relationship(
+        "WAF",
+        back_populates="vpc",
+        cascade="all, delete-orphan"
+    )
 
     peerings_source = relationship(
-    "VPCPeering",
-    foreign_keys="VPCPeering.vpc_source_id"
+        "VPCPeering",
+        foreign_keys="VPCPeering.vpc_source_id",
+        cascade="all, delete-orphan"
     )
 
     peerings_target = relationship(
-    "VPCPeering",
-    foreign_keys="VPCPeering.vpc_target_id"
+        "VPCPeering",
+        foreign_keys="VPCPeering.vpc_target_id",
+        cascade="all, delete-orphan"
     )

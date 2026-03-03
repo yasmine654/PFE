@@ -56,5 +56,14 @@ class VM(Base):
     subnet = relationship("Subnet", back_populates="vms")
     vpc = relationship("VPC", back_populates="vms")
 
-    volumes = relationship("Volume", back_populates="vm")
-    security_groups = relationship("SecurityGroup", back_populates="vm")
+    volumes = relationship(
+        "Volume",
+        back_populates="vm",
+        cascade="all, delete-orphan"
+    )
+
+    security_groups = relationship(
+        "SecurityGroup",
+        back_populates="vm",
+        cascade="all, delete-orphan"
+    )

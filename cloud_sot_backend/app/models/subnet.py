@@ -32,8 +32,32 @@ class Subnet(Base):
     vpc = relationship("VPC", back_populates="subnets")
     availability_zone = relationship("AvailabilityZone", back_populates="subnets")
 
-    vms = relationship("VM", back_populates="subnet")
-    acls = relationship("ACL", back_populates="subnet", cascade="all, delete")
-    load_balancers = relationship("LoadBalancer", back_populates="subnet")
-    vpn_gateways = relationship("VPNGateway", back_populates="subnet")
-    wafs = relationship("WAF", back_populates="subnet")
+    vms = relationship(
+    "VM",
+    back_populates="subnet",
+    cascade="all, delete-orphan"
+    )
+
+    acls = relationship(
+    "ACL",
+    back_populates="subnet",
+    cascade="all, delete-orphan"
+    )
+
+    load_balancers = relationship(
+    "LoadBalancer",
+    back_populates="subnet",
+    cascade="all, delete-orphan"
+    )
+
+    vpn_gateways = relationship(
+    "VPNGateway",
+    back_populates="subnet",
+    cascade="all, delete-orphan"
+    )
+
+    wafs = relationship(
+    "WAF",
+    back_populates="subnet",
+    cascade="all, delete-orphan"
+    )

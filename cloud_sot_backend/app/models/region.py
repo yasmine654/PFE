@@ -18,7 +18,27 @@ class Region(Base):
     )
 
     provider = relationship("Provider", back_populates="regions")
-    availability_zones = relationship("AvailabilityZone", back_populates="region")
-    vpcs = relationship("VPC", back_populates="region")
-    vms = relationship("VM", back_populates="region")
-    elastic_ips = relationship("ElasticIP", back_populates="region")
+
+    availability_zones = relationship(
+        "AvailabilityZone",
+        back_populates="region",
+        cascade="all, delete-orphan"
+    )
+
+    vpcs = relationship(
+        "VPC",
+        back_populates="region",
+        cascade="all, delete-orphan"
+    )
+
+    vms = relationship(
+        "VM",
+        back_populates="region",
+        cascade="all, delete-orphan"
+    )
+
+    elastic_ips = relationship(
+        "ElasticIP",
+        back_populates="region",
+        cascade="all, delete-orphan"
+    )

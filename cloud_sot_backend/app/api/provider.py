@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 
 from app.core.database import get_db
 from app.schemas.provider import ProviderCreate, ProviderResponse, ProviderUpdate
 from app.crud import provider as crud_provider
 from app.models.provider import Provider
-from app.models.account import Account
 
 router = APIRouter(prefix="/providers", tags=["Providers"])
 
@@ -35,6 +33,7 @@ def read_provider(provider_id: int, db: Session = Depends(get_db)):
 # 🔒 DELETE NORMAL (bloqué si dépendances)
 @router.delete("/{provider_id}")
 def delete_provider(provider_id: int, db: Session = Depends(get_db)):
+
     provider_obj = db.query(Provider).filter(
         Provider.provider_id == provider_id
     ).first()
@@ -42,10 +41,19 @@ def delete_provider(provider_id: int, db: Session = Depends(get_db)):
     if not provider_obj:
         raise HTTPException(status_code=404, detail="Provider not found")
 
-    if provider_obj.accounts:
+    # 🔒 Vérification via ORM (relationships)
+    if (
+        provider_obj.accounts
+        or provider_obj.regions
+        or provider_obj.vpcs
+        or provider_obj.vms
+        or provider_obj.vpn_gateways
+        or provider_obj.elastic_ips
+        or provider_obj.vpc_peerings
+    ):
         raise HTTPException(
             status_code=400,
-            detail="Cannot delete provider with existing accounts. Use /force endpoint."
+            detail="Cannot delete provider with existing dependencies. Use /force."
         )
 
     db.delete(provider_obj)
@@ -54,9 +62,10 @@ def delete_provider(provider_id: int, db: Session = Depends(get_db)):
     return {"message": "Provider deleted"}
 
 
-# 💣 DELETE FORCÉ (supprime les dépendances)
+# 💣 DELETE FORCÉ (ORM cascade supprime toute la hiérarchie)
 @router.delete("/{provider_id}/force")
 def force_delete_provider(provider_id: int, db: Session = Depends(get_db)):
+
     provider_obj = db.query(Provider).filter(
         Provider.provider_id == provider_id
     ).first()
@@ -64,21 +73,8 @@ def force_delete_provider(provider_id: int, db: Session = Depends(get_db)):
     if not provider_obj:
         raise HTTPException(status_code=404, detail="Provider not found")
 
-    try:
-        # 🔥 suppression des accounts liés
-        db.query(Account).filter(
-            Account.provider_id == provider_id
-        ).delete()
-
-        db.delete(provider_obj)
-        db.commit()
-
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail="Provider still has other dependencies."
-        )
+    db.delete(provider_obj)   # 🔥 cascade ORM fait tout
+    db.commit()
 
     return {"message": "Provider force deleted"}
 
