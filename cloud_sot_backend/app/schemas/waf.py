@@ -1,0 +1,29 @@
+from pydantic import BaseModel
+from typing import Optional
+
+
+class WAFBase(BaseModel):
+
+    vpc_id: int
+    subnet_id: int
+    ip_public: Optional[str] = None
+
+
+class WAFCreate(WAFBase):
+    pass
+
+
+class WAFUpdate(BaseModel):
+
+    vpc_id: Optional[int] = None
+    subnet_id: Optional[int] = None
+    ip_public: Optional[str] = None
+
+
+class WAFResponse(WAFBase):
+
+    waf_id: int
+
+    model_config = {
+        "from_attributes": True
+    }
