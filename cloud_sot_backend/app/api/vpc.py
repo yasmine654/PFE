@@ -7,6 +7,7 @@ from app.schemas.vpc import VPCCreate, VPCResponse, VPCUpdate
 from app.crud import vpc as crud_vpc
 from app.models.vpc import VPC
 from app.models.tenant import Tenant
+from app.models.account import Account
 from app.models.provider import Provider
 from app.models.region import Region
 
@@ -21,7 +22,7 @@ def create_vpc(vpc: VPCCreate, db: Session = Depends(get_db)):
     validate_fk_exists(db, Tenant, "Tenant", vpc.tenant_id)
     validate_fk_exists(db, Provider, "Provider", vpc.provider_id)
     validate_fk_exists(db, Region, "Region", vpc.region_id)
-
+    validate_fk_exists(db, Account, "Account", vpc.account_id)
     return crud_vpc.create_vpc(db, vpc)
 
 
@@ -96,6 +97,9 @@ def update_vpc(vpc_id: int, vpc_update: VPCUpdate, db: Session = Depends(get_db)
     # Vérifier parents si modifiés
     if vpc_update.tenant_id is not None:
         validate_fk_exists(db, Tenant, "Tenant", vpc_update.tenant_id)
+    
+    if vpc_update.account_id is not None:
+        validate_fk_exists(db, Account, "Account", vpc_update.account_id)
 
     if vpc_update.provider_id is not None:
         validate_fk_exists(db, Provider, "Provider", vpc_update.provider_id)

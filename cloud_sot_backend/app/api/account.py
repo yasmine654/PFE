@@ -50,7 +50,7 @@ def update_account(account_id: int, account: AccountUpdate, db: Session = Depend
     return updated
 
 
-# ✅ DELETE (simple enfant)
+
 @router.delete("/{account_id}")
 def delete_account(account_id: int, db: Session = Depends(get_db)):
 
@@ -61,7 +61,30 @@ def delete_account(account_id: int, db: Session = Depends(get_db)):
     if not account_obj:
         raise HTTPException(status_code=404, detail="Account not found")
 
+    # 🔒 Vérification ORM
+    if account_obj.vpcs:
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete account with existing dependencies. Use /force."
+        )
+
     db.delete(account_obj)
     db.commit()
 
     return {"message": "Account deleted"}
+
+
+@router.delete("/{account_id}/force")
+def force_delete_account(account_id: int, db: Session = Depends(get_db)):
+
+    account_obj = db.query(Account).filter(
+        Account.account_id == account_id
+    ).first()
+
+    if not account_obj:
+        raise HTTPException(status_code=404, detail="Account not found")
+
+    db.delete(account_obj)  # 🔥 cascade ORM
+    db.commit()
+
+    return {"message": "Account force deleted"}

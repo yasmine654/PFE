@@ -47,7 +47,7 @@ def delete_tenant(tenant_id: int, db: Session = Depends(get_db)):
         or tenant_obj.vpcs
         or tenant_obj.vms
         or tenant_obj.vpn_gateways
-        or tenant_obj.elastic_ips
+        
         or tenant_obj.vpc_peerings
     ):
         raise HTTPException(

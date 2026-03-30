@@ -6,6 +6,7 @@ from sqlalchemy.sql import expression
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
+
 class VM(Base):
     __tablename__ = "vm"
 
@@ -26,7 +27,11 @@ class VM(Base):
     image = Column(String(100))
 
     private_ip = Column(String(50))
-    public_ip = Column(String(50))
+
+    elastic_ip_id = Column(
+        Integer,
+        ForeignKey("elastic_ip.elastic_ip_id")
+    )
 
     subnet_id = Column(Integer, ForeignKey("subnet.subnet_id"))
     vpc_id = Column(Integer, ForeignKey("vpc.vpc_id"))
@@ -55,6 +60,11 @@ class VM(Base):
 
     subnet = relationship("Subnet", back_populates="vms")
     vpc = relationship("VPC", back_populates="vms")
+
+    elastic_ip = relationship(
+        "ElasticIP",
+        back_populates="vms"
+    )
 
     volumes = relationship(
         "Volume",

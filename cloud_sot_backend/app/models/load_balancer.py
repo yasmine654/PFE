@@ -23,5 +23,9 @@ class LoadBalancer(Base):
     vpc = relationship("VPC", back_populates="load_balancers")
     subnet = relationship("Subnet", back_populates="load_balancers")
 
-
+    vips = relationship(
+        "VIP",
+        back_populates="load_balancer",
+        cascade="all, delete-orphan"
+    )
     

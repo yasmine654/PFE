@@ -14,6 +14,7 @@ from app.crud import nat_gateway as crud_nat
 
 from app.models.nat_gateway import NATGateway
 from app.models.vpc import VPC
+from app.models.subnet import Subnet
 
 router = APIRouter(prefix="/nat_gateways", tags=["NAT Gateways"])
 
@@ -23,6 +24,7 @@ router = APIRouter(prefix="/nat_gateways", tags=["NAT Gateways"])
 def create_nat_gateway(nat: NATGatewayCreate, db: Session = Depends(get_db)):
 
     validate_fk_exists(db, VPC, "VPC", nat.vpc_id)
+    validate_fk_exists(db, Subnet, "Subnet", nat.subnet_id)
 
     return crud_nat.create_nat_gateway(db, nat)
 
@@ -91,5 +93,10 @@ def update_nat_gateway(nat_id: int, nat_update: NATGatewayUpdate, db: Session = 
 
     if not updated:
         raise HTTPException(status_code=404, detail="NAT Gateway not found")
+    
+    if nat_update.subnet_id is not None:
+       validate_fk_exists(db, Subnet, "Subnet", nat_update.subnet_id)
 
     return updated
+
+    

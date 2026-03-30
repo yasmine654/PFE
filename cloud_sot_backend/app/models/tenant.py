@@ -48,12 +48,7 @@ class Tenant(Base):
         cascade="all, delete-orphan"
     )
 
-    elastic_ips = relationship(
-        "ElasticIP",
-        back_populates="tenant",
-        cascade="all, delete-orphan"
-    )
-
+   
     vpc_peerings = relationship(
         "VPCPeering",
         back_populates="tenant",

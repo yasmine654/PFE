@@ -48,7 +48,6 @@ def read_load_balancer(lb_id: int, db: Session = Depends(get_db)):
     return lb
 
 
-# DELETE NORMAL
 @router.delete("/{lb_id}")
 def delete_load_balancer(lb_id: int, db: Session = Depends(get_db)):
 
@@ -58,6 +57,13 @@ def delete_load_balancer(lb_id: int, db: Session = Depends(get_db)):
 
     if not lb:
         raise HTTPException(status_code=404, detail="Load Balancer not found")
+
+    # 🔒 check dépendances (VIP)
+    if lb.vips:
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete load balancer with existing dependencies. Use /force."
+        )
 
     db.delete(lb)
     db.commit()

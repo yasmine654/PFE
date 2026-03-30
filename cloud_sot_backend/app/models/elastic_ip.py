@@ -9,13 +9,17 @@ class ElasticIP(Base):
 
     ip = Column(String(50), nullable=False, unique=True)
 
-    tenant_id = Column(Integer, ForeignKey("tenant.tenant_id"))
+    
     provider_id = Column(Integer, ForeignKey("provider.provider_id"))
     region_id = Column(Integer, ForeignKey("region.region_id"))
 
     attached = Column(Boolean, server_default="false")
     attached_to = Column(String(100))
 
-    tenant = relationship("Tenant", back_populates="elastic_ips")
+    
     provider = relationship("Provider", back_populates="elastic_ips")
     region = relationship("Region", back_populates="elastic_ips")
+
+    vms = relationship("VM", back_populates="elastic_ip")
+    vpn_gateways = relationship("VPNGateway", back_populates="elastic_ip")
+    wafs = relationship("WAF", back_populates="elastic_ip")

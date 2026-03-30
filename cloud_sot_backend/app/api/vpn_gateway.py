@@ -17,6 +17,7 @@ from app.models.tenant import Tenant
 from app.models.provider import Provider
 from app.models.vpc import VPC
 from app.models.subnet import Subnet
+from app.models.elastic_ip import ElasticIP
 
 router = APIRouter(prefix="/vpn_gateways", tags=["VPN Gateways"])
 
@@ -29,6 +30,9 @@ def create_vpn_gateway(vpn: VPNGatewayCreate, db: Session = Depends(get_db)):
     validate_fk_exists(db, Provider, "Provider", vpn.provider_id)
     validate_fk_exists(db, VPC, "VPC", vpn.vpc_id)
     validate_fk_exists(db, Subnet, "Subnet", vpn.subnet_id)
+
+    if vpn.elastic_ip_id:
+        validate_fk_exists(db, ElasticIP, "Elastic IP", vpn.elastic_ip_id)
 
     return crud_vpn.create_vpn_gateway(db, vpn)
 
@@ -91,6 +95,9 @@ def update_vpn_gateway(vpn_id: int, vpn_update: VPNGatewayUpdate, db: Session = 
 
     if vpn_update.subnet_id is not None:
         validate_fk_exists(db, Subnet, "Subnet", vpn_update.subnet_id)
+
+    if vpn_update.elastic_ip_id is not None:
+        validate_fk_exists(db, ElasticIP, "Elastic IP", vpn_update.elastic_ip_id)
 
     updated = crud_vpn.update_vpn_gateway(db, vpn_id, vpn_update)
 

@@ -20,7 +20,7 @@ class VMBase(BaseModel):
     image: Optional[str] = None
 
     private_ip: Optional[str] = None
-    public_ip: Optional[str] = None
+    elastic_ip_id: Optional[int] = None
 
     state: Optional[str] = None
 
@@ -47,7 +47,7 @@ class VMUpdate(BaseModel):
     image: Optional[str] = None
 
     private_ip: Optional[str] = None
-    public_ip: Optional[str] = None
+    elastic_ip_id: Optional[int] = None
 
     state: Optional[str] = None
 

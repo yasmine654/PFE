@@ -4,6 +4,7 @@ from typing import Optional
 
 class VPCBase(BaseModel):
     tenant_id: int
+    account_id: int
     provider_id: int
     region_id: int
     cidr: str
@@ -22,6 +23,7 @@ class VPCUpdate(BaseModel):
     tenant_id: Optional[int] = None
     provider_id: Optional[int] = None
     region_id: Optional[int] = None
+    account_id: Optional[int] = None
 
 
 class VPCResponse(VPCBase):

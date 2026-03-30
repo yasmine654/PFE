@@ -6,7 +6,7 @@ class WAFBase(BaseModel):
 
     vpc_id: int
     subnet_id: int
-    ip_public: Optional[str] = None
+    elastic_ip_id: Optional[int] = None
 
 
 class WAFCreate(WAFBase):
@@ -17,7 +17,7 @@ class WAFUpdate(BaseModel):
 
     vpc_id: Optional[int] = None
     subnet_id: Optional[int] = None
-    ip_public: Optional[str] = None
+    elastic_ip_id: Optional[int] = None
 
 
 class WAFResponse(WAFBase):

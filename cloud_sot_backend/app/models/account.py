@@ -37,3 +37,8 @@ class Account(Base):
 
     tenant = relationship("Tenant", back_populates="accounts")
     provider = relationship("Provider", back_populates="accounts")
+    vpcs = relationship(
+    "VPC",
+    back_populates="account",
+    cascade="all, delete-orphan"
+)

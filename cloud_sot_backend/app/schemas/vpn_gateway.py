@@ -10,7 +10,7 @@ class VPNGatewayBase(BaseModel):
     subnet_id: int
 
     type: str
-    public_ip: Optional[str] = None
+    elastic_ip_id: Optional[int] = None
 
 
 class VPNGatewayCreate(VPNGatewayBase):
@@ -25,7 +25,7 @@ class VPNGatewayUpdate(BaseModel):
     subnet_id: Optional[int] = None
 
     type: Optional[str] = None
-    public_ip: Optional[str] = None
+    elastic_ip_id: Optional[int] = None
 
 
 class VPNGatewayResponse(VPNGatewayBase):

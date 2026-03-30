@@ -5,6 +5,7 @@ from typing import Optional
 class NATGatewayBase(BaseModel):
 
     vpc_id: int
+    subnet_id: int
     snat_rule: Optional[str] = None
     dnat_rule: Optional[str] = None
 
@@ -16,6 +17,7 @@ class NATGatewayCreate(NATGatewayBase):
 class NATGatewayUpdate(BaseModel):
 
     vpc_id: Optional[int] = None
+    subnet_id: Optional[int] = None
     snat_rule: Optional[str] = None
     dnat_rule: Optional[str] = None
 

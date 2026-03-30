@@ -19,6 +19,12 @@ class Subnet(Base):
         Integer,
         ForeignKey("availability_zone.az_id")
     )
+    
+    nat_gateways = relationship(
+        "NATGateway",
+        back_populates="subnet",
+        cascade="all, delete-orphan"
+    )
 
     cidr = Column(String(50), nullable=False)
     available_ips = Column(Integer)
@@ -60,4 +66,16 @@ class Subnet(Base):
     "WAF",
     back_populates="subnet",
     cascade="all, delete-orphan"
+    )
+
+    nat_gateways = relationship(
+        "NATGateway",
+        back_populates="subnet",
+        cascade="all, delete-orphan"
+    )
+
+    vips = relationship(
+        "VIP",
+        back_populates="subnet",
+        cascade="all, delete-orphan"
     )

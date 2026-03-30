@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, CheckConstraint
 from app.core.database import Base
 from sqlalchemy.orm import relationship
 
+
 class VPNGateway(Base):
     __tablename__ = "vpn_gateway"
 
@@ -15,7 +16,10 @@ class VPNGateway(Base):
     vpc_id = Column(Integer, ForeignKey("vpc.vpc_id"))
     subnet_id = Column(Integer, ForeignKey("subnet.subnet_id"))
 
-    public_ip = Column(String(50))
+    elastic_ip_id = Column(
+        Integer,
+        ForeignKey("elastic_ip.elastic_ip_id")
+    )
 
     __table_args__ = (
         CheckConstraint(
@@ -29,3 +33,8 @@ class VPNGateway(Base):
     provider = relationship("Provider", back_populates="vpn_gateways")
     vpc = relationship("VPC", back_populates="vpn_gateways")
     subnet = relationship("Subnet", back_populates="vpn_gateways")
+
+    elastic_ip = relationship(
+        "ElasticIP",
+        back_populates="vpn_gateways"
+    )

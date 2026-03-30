@@ -13,7 +13,7 @@ from app.schemas.elastic_ip import (
 from app.crud import elastic_ip as crud_eip
 
 from app.models.elastic_ip import ElasticIP
-from app.models.tenant import Tenant
+
 from app.models.provider import Provider
 from app.models.region import Region
 
@@ -24,7 +24,7 @@ router = APIRouter(prefix="/elastic_ips", tags=["Elastic IPs"])
 @router.post("/", response_model=ElasticIPResponse)
 def create_elastic_ip(eip: ElasticIPCreate, db: Session = Depends(get_db)):
 
-    validate_fk_exists(db, Tenant, "Tenant", eip.tenant_id)
+    
     validate_fk_exists(db, Provider, "Provider", eip.provider_id)
     validate_fk_exists(db, Region, "Region", eip.region_id)
 
@@ -88,8 +88,7 @@ def force_delete_elastic_ip(elastic_ip_id: int, db: Session = Depends(get_db)):
 @router.put("/{elastic_ip_id}", response_model=ElasticIPResponse)
 def update_elastic_ip(elastic_ip_id: int, eip_update: ElasticIPUpdate, db: Session = Depends(get_db)):
 
-    if eip_update.tenant_id is not None:
-        validate_fk_exists(db, Tenant, "Tenant", eip_update.tenant_id)
+    
 
     if eip_update.provider_id is not None:
         validate_fk_exists(db, Provider, "Provider", eip_update.provider_id)

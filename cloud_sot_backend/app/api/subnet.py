@@ -55,6 +55,7 @@ def delete_subnet(subnet_id: int, db: Session = Depends(get_db)):
         or subnet.load_balancers
         or subnet.vpn_gateways
         or subnet.wafs
+        or subnet.nat_gateways
     ):
         raise HTTPException(
             status_code=400,

@@ -15,6 +15,7 @@ from app.crud import waf as crud_waf
 from app.models.waf import WAF
 from app.models.vpc import VPC
 from app.models.subnet import Subnet
+from app.models.elastic_ip import ElasticIP
 
 router = APIRouter(prefix="/wafs", tags=["WAFs"])
 
@@ -25,6 +26,9 @@ def create_waf(waf: WAFCreate, db: Session = Depends(get_db)):
 
     validate_fk_exists(db, VPC, "VPC", waf.vpc_id)
     validate_fk_exists(db, Subnet, "Subnet", waf.subnet_id)
+
+    if waf.elastic_ip_id:
+        validate_fk_exists(db, ElasticIP, "Elastic IP", waf.elastic_ip_id)
 
     return crud_waf.create_waf(db, waf)
 
@@ -81,6 +85,9 @@ def update_waf(waf_id: int, waf_update: WAFUpdate, db: Session = Depends(get_db)
 
     if waf_update.subnet_id is not None:
         validate_fk_exists(db, Subnet, "Subnet", waf_update.subnet_id)
+
+    if waf_update.elastic_ip_id is not None:
+        validate_fk_exists(db, ElasticIP, "Elastic IP", waf_update.elastic_ip_id)
 
     updated = crud_waf.update_waf(db, waf_id, waf_update)
 
