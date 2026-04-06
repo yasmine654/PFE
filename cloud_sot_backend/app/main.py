@@ -30,6 +30,8 @@ from app.api import vpn_gateway as vpn_api
 from app.api import waf as waf_api
 from app.api import vip as vip_api
 
+from app.api.conflicts import router as conflict_router
+
 app = FastAPI(title="Cloud Source of Truth")
 
 # ✅ CREATE TABLES
@@ -58,3 +60,4 @@ app.include_router(volume_api.router)
 app.include_router(vpn_api.router)
 app.include_router(waf_api.router)
 app.include_router(vip_api.router)
+app.include_router(conflict_router)
