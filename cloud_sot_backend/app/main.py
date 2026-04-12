@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, Base
 
 # ✅ IMPORT MODELS (important pour create_all)
@@ -32,11 +33,22 @@ from app.api import vip as vip_api
 
 from app.api.conflicts import router as conflict_router
 
+# 🔥 CREATE APP
 app = FastAPI(title="Cloud Source of Truth")
+
+# 🔥 CORS (IMPORTANT POUR FRONTEND REACT)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # en dev (plus tard on limite)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ✅ CREATE TABLES
 Base.metadata.create_all(bind=engine)
 
+# ✅ ROOT TEST
 @app.get("/")
 def root():
     return {"message": "Backend is running 🚀"}

@@ -1,0 +1,38 @@
+.topbar {
+  height: 60px;
+  background: white;
+  border-bottom: 1px solid #eee;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 20px;
+}
+
+/* left title */
+.left h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* filters */
+.filters {
+  display: flex;
+  gap: 15px;
+}
+
+/* select */
+.filters select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.filters select:hover {
+  border-color: #4dabf7;
+}

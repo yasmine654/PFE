@@ -1,0 +1,76 @@
+.security {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* header */
+.header h1 {
+  font-size: 22px;
+}
+
+/* tabs */
+.tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tabs button {
+  padding: 8px 14px;
+  border: none;
+  background: #e0e0e0;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.tabs button.active {
+  background: #4dabf7;
+  color: white;
+}
+
+/* table */
+.table-container {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f5f6fa;
+  text-align: left;
+  padding: 12px;
+  font-size: 13px;
+}
+
+td {
+  padding: 12px;
+  border-top: 1px solid #eee;
+}
+
+tr:hover {
+  background: #f9f9f9;
+}
+
+/* 🔥 BADGES */
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+}
+
+/* couleurs */
+.badge.inbound {
+  background: #2ecc71;
+}
+
+.badge.outbound {
+  background: #e74c3c;
+}
