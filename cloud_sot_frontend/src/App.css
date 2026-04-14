@@ -9,3 +9,16 @@
   border: none;
   scroll-behavior: smooth;
 }
+
+/* LAYOUT GLOBAL */
+.app-layout {
+  display: flex;
+}
+
+/* CONTENU PRINCIPAL */
+.main-content {
+  flex: 1; /* prend tout l’espace restant */
+  /* padding: 20px; */
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}

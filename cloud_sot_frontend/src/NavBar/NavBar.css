@@ -1,0 +1,171 @@
+/* NAVBAR */
+.navbar {
+  background: #081c32;
+  color: hsl(247, 15%, 77%);
+  height: 100vh;
+  padding: 10px;
+
+  
+  display: flex;
+  flex-direction: column;
+
+
+  transition: width 0.3s ease;
+}
+
+/* STATES */
+.navbar.open {
+  width: 250px;
+}
+
+.navbar.closed {
+  width: 80px;
+}
+
+/* HEADER (LOGO + BUTTON) */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+/* LOGO */
+.logo {
+    /* background-color: #b01313; */
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* TOGGLE BUTTON */
+.toggle-btn {
+  /* background-color: aqua; */
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* TOP */
+.top {
+  /* background-color: rgb(2, 37, 26);   */
+  width: 100%;
+}
+
+/* NAV LINKS */
+.nav-links {
+  /* background-color: rgb(212, 130, 23);   */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* LINK */
+.icon-links {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 12px 15px;
+  border-radius: 12px;
+  margin: 5px 0;
+
+  text-decoration: none;
+  color: inherit;
+
+  transition: 0.3s;
+}
+
+/* ICON */
+.icon-links img {
+  width: 20px;
+  height: 20px;
+}
+
+/* HOVER */
+.icon-links:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* ACTIVE */
+.icon-links.active {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* ACCUEIL */
+.accueil {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  
+  margin-top: auto;
+  padding: 12px 15px;
+  border-radius: 12px;
+
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.accueil:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.accueil img {
+  width: 20px;
+  height: 20px;
+}
+
+/* MODE FERMÉ */
+.navbar.closed .icon-links {
+  justify-content: center;
+}
+
+.navbar.closed .accueil {
+  justify-content: center;
+}
+
+.navbar.closed h5 {
+  display: none;
+}
+
+.navbar.closed .logo {
+  display: none;
+}
+
+.toggle-btn img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+/* rotation quand navbar ouverte */
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* petit effet hover */
+.toggle-btn img:hover {
+  transform: scale(1.2);
+}
+/* ALIGNEMENT DU BOUTON EN MODE FERMÉ */
+.navbar.closed .header {
+  justify-content: center;
+}
+
+/* cacher le logo en mode fermé (déjà fait normalement) */
+.navbar.closed .logo {
+  display: none;
+}
+
+/* centrer le bouton */
+.navbar.closed .toggle-btn {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

@@ -1,39 +1,38 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./NavBar/Navbar";
+import "./App.css";
 
-import Layout from "./Layout/Layout";
-import FilterProvider from "./Context/FilterProvider";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Pages
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Compute from "./Pages/Compute/Compute";
 import Network from "./Pages/Network/Network";
+import Storage from "./Pages/Storage/Storage";
 import Security from "./Pages/Security/Security";
+import VPN from "./Pages/VPN/VPN";
 import Anomalies from "./Pages/Anomalies/Anomalies";
 import FinOps from "./Pages/FinOps/FinOps";
-import Storage from "./Pages/Storage/Storage";   // ✅ AJOUT
-import Vpn from "./Pages/Vpn/Vpn";               // ✅ AJOUT
 
 function App() {
   return (
-    <BrowserRouter>
-      <FilterProvider>
-        <Routes>
-          <Route path="/" element={<Layout />}>
+    <Router>
+      <div className="app-layout">
+        <Navbar />
 
-            <Route index element={<Dashboard />} />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/compute" element={<Compute />} />
+            <Route path="/network" element={<Network />} />
+            <Route path="/storage" element={<Storage />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/vpn" element={<VPN />} />
+            <Route path="/anomalies" element={<Anomalies />} />
+            <Route path="/finops" element={<FinOps />} />
+          </Routes>
+        </div>
 
-            <Route path="compute" element={<Compute />} />
-            <Route path="network" element={<Network />} />
-            <Route path="storage" element={<Storage />} />
-            <Route path="security" element={<Security />} />
-            <Route path="vpn" element={<Vpn />} />
-            <Route path="anomalies" element={<Anomalies />} />
-            <Route path="finops" element={<FinOps />} />
-
-          </Route>
-        </Routes>
-      </FilterProvider>
-    </BrowserRouter>
+      </div>
+    </Router>
   );
 }
 

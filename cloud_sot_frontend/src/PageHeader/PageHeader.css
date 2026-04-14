@@ -1,0 +1,44 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #dedfe1;
+  padding: 20px;
+  /* border-radius: 10px; */
+}
+
+/* LEFT */
+.left h1 {
+  margin: 5px 0;
+}
+
+.breadcrumb {
+  font-size: 14px;
+  color: gray;
+}
+
+/* BUTTON */
+.sync-btn {
+  background: #ff1e1e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  transition: 0.3s;
+}
+
+.sync-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+.sync-btn:hover {
+  background: #d90000;
+}
