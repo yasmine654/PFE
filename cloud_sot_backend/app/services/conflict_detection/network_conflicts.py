@@ -90,7 +90,6 @@ def detect_network_conflicts(db, vpcs=None, subnets=None, vms=None):
             if vpc1.account_id != vpc2.account_id:
                 continue
 
-            # ✅ DEBUG bien placé
             logger.debug(f"Checking VPC {vpc1.vpc_id} vs {vpc2.vpc_id}")
 
             net1 = get_network(vpc1.cidr)
@@ -133,7 +132,7 @@ def detect_network_conflicts(db, vpcs=None, subnets=None, vms=None):
                 "category": "NETWORK",
                 "subcategory": "SUBNET",
                 "type": "SUBNET_OUTSIDE_VPC",
-                "severity": "HIGH",  # 🔥 corrigé
+                "severity": "HIGH",
                 "resource": "Subnet",
                 "resource_id": subnet.subnet_id,
                 "message": f"Subnet {subnet.cidr} not inside VPC {vpc.cidr}",
@@ -189,17 +188,7 @@ def detect_network_conflicts(db, vpcs=None, subnets=None, vms=None):
         try:
             ip = ipaddress.ip_address(vm.private_ip)
         except ValueError:
-            conflicts.append({
-                "category": "NETWORK",
-                "subcategory": "VM",
-                "type": "INVALID_IP",
-                "severity": "HIGH",
-                "resource": "VM",
-                "resource_id": vm.vm_id,
-                "message": f"Invalid IP: {vm.private_ip}",
-                "related_resources": [vm.vm_id]
-            })
-            continue
+            continue  # 🔥 CORRECTION : on ignore ici
 
         if subnet_net and ip not in subnet_net:
             conflicts.append({

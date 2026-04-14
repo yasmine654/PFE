@@ -37,9 +37,20 @@ def detect_ip_conflicts(db):
             continue
 
         try:
-          ip = ipaddress.ip_address(vm.private_ip)
+            ip = ipaddress.ip_address(vm.private_ip)
         except ValueError:
-          continue  # 🔥 on ignore ici
+            logger.warning(f"Invalid IP detected (VM {vm.vm_id}): {vm.private_ip}")
+            conflicts.append({
+                "category": "NETWORK",
+                "subcategory": "IP",
+                "type": "INVALID_IP",
+                "severity": "HIGH",
+                "resource": "VM",
+                "resource_id": vm.vm_id,
+                "message": f"Invalid IP format: {vm.private_ip}",
+                "related_resources": [vm.vm_id]
+            })
+            continue  # ✅ CORRECT
 
         if vm.subnet_id:
             subnet_id = vm.subnet_id
@@ -80,6 +91,7 @@ def detect_ip_conflicts(db):
 
         key = (frozenset(vm_ids), ip)
 
+        # 🔥 éviter doublon avec subnet
         if key in reported_subnet_conflicts:
             continue
 
