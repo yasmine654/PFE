@@ -1,14 +1,17 @@
-# app/services/conflict_detection/engine.py
-
-from app.services.conflict_detection.ip_conflicts import detect_ip_conflicts
 from app.services.conflict_detection.network_conflicts import detect_network_conflicts
+from app.services.conflict_detection.ip_conflicts import detect_ip_conflicts
 from app.services.conflict_detection.security_conflicts import detect_security_conflicts
+from app.services.conflict_detection.correlation import correlate_conflicts
+
 
 def detect_all_conflicts(db):
-    conflicts = []
+    network = detect_network_conflicts(db)
+    ip = detect_ip_conflicts(db)
+    security = detect_security_conflicts(db)
 
-    conflicts.extend(detect_ip_conflicts(db))
-    conflicts.extend(detect_network_conflicts(db))
-    conflicts.extend(detect_security_conflicts(db))
+    all_conflicts = network + ip + security
 
-    return conflicts
+    # 🔥 CORRELATION
+    correlated = correlate_conflicts(all_conflicts)
+
+    return all_conflicts + correlated
