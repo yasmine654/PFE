@@ -1,0 +1,103 @@
+/* 🔥 Container */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* desktop */
+  gap: 25px;
+  margin: 20px;
+}
+
+/* 🔥 RESPONSIVE BREAKPOINTS */
+
+/* tablette */
+@media (max-width: 1200px) {
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* petit écran */
+@media (max-width: 768px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 🔥 Card */
+.card {
+  border-radius: 20px;
+  padding: 25px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  min-height: 150px; /* garde taille uniforme */
+  width: 100%;
+
+  transition: all 0.3s ease;
+}
+
+/* hover */
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+/* 🔥 top */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 🔥 titre */
+.card p {
+  font-size: clamp(14px, 1.2vw, 16px); /* 🔥 responsive */
+  margin: 0;
+}
+
+/* 🔥 valeur */
+.card h2 {
+  font-size: clamp(28px, 2.5vw, 36px); /* 🔥 responsive */
+  margin-top: auto;
+  font-weight: 700;
+}
+
+/* 🔥 icône */
+.card-icon {
+  font-size: clamp(22px, 2vw, 28px);
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* 🎨 couleurs */
+.card.blue {
+  background: linear-gradient(135deg, #0b2145, #1e40ff);
+}
+
+.card.green {
+  background: linear-gradient(135deg, #10602d, #22ff77);
+}
+
+.card.orange {
+  background: linear-gradient(135deg, #7d0e0e, #ff3b3b);
+}
+
+.card.purple {
+  background: linear-gradient(135deg, #a0960f, #ffee00);
+}
+
+/* 🔥 effet lumière */
+.card::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -30%;
+  width: 160px;
+  height: 160px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}

@@ -1,0 +1,85 @@
+/* 🔥 Container */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+  margin: 10px;
+}
+
+/* 🔥 Card */
+.card {
+  border-radius: 18px;
+  padding: 20px;
+  color: rgb(255, 255, 255);
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  transition: all 0.3s ease;
+}
+
+/* hover */
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+/* 🔥 contenu */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* titre */
+.card p {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* valeur */
+.card h2 {
+  font-size: 32px;
+  margin-top: 15px;
+  font-weight: 700;
+}
+
+/* 🔥 icône */
+.card-icon {
+  font-size: 26px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+/* 🎨 couleurs GRADIENTS */
+.card.blue {
+  background: linear-gradient(135deg, #0b2145, #172bff);
+}
+
+.card.green {
+  background: linear-gradient(135deg, #10602d, #19ff6d);
+}
+
+.card.orange {
+  background: linear-gradient(135deg, #7d0e0e, #ff1010);
+}
+
+.card.purple {
+  background: linear-gradient(135deg, #a0960f, #fbff00);
+}
+
+/* 🔥 effet lumière */
+.card::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -30%;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+}

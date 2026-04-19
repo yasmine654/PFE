@@ -1,0 +1,221 @@
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table {
+  width: 98%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0px 14px;
+}
+
+thead tr {
+  background-color: #f5f5f5;
+}
+
+th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #c8c4c4;
+  font-weight: 600;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #ffffff;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background-color: #e4e6e9;
+}
+
+td {
+  padding: 14px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0f0f0;
+  /* background-color: #1a9e5c; */
+}
+
+.vm-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.vm-id {
+  font-size: 12px;
+  color: #999;
+}
+
+/* état dans la TABLE — avec fond et bordure */
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: #d70000;
+}
+
+.status.running {
+  background-color: #f1ffea;
+  color: #1a9e5c;
+  border: 1px solid #b6e8d3;
+}
+
+.status.stopped {
+  background-color: #ffeeee;
+  color: #d70000;
+  border: 1px solid #ff7979;
+}
+
+/* état dans la MODAL view — juste la couleur, pas de fond ni bordure */
+.status-text.running {
+  color: #1a9e5c;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-text.stopped {
+  color: #e07b00;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.resources {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vcpu, .ram {
+  font-size: 13px;
+  color: #444;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.action-icon {
+  width: 20px;
+  height: 45PX;
+  object-fit: contain;
+  cursor: pointer;
+  /* background-color: aqua; */
+  opacity: 0.7;
+}
+
+.action-icon:hover {
+  opacity: 1;
+}
+
+/* OVERLAY VM */
+.vm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* background-color: #d70000; */
+}
+
+/* MODAL VM */
+.vm-modal {
+  background: rgb(255, 255, 255);
+  padding: 25px;
+  border-radius: 14px;
+  width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.vm-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.vm-modal-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #888;
+}
+
+.close-btn:hover {
+  color: #ff0000;
+}
+
+.vm-modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  /* background-color: #1a9e5c; */
+}
+
+.vm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  /* background-color: #e07b00; */
+}
+
+.vm-field label {
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  /* background-color: #d70000; */
+}
+
+.vm-field input{
+  /* background-color: #1a9e5c; */
+  border: 1px solid;
+  border-color: #c8c4c4;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.vm-field input:hover{
+  border-color: #888;
+}
+
+.vm-field select{
+  /* background-color: #d70000; */
+  border: 1px solid;
+  border-color: #c8c4c4;
+  border-radius: 5px;
+  padding: 5px; 
+}
+
+.vm-field option{
+  border: 1px solid;
+  border-color: #c8c4c4;
+  border-radius: 5px;
+  padding: 5px;
+}

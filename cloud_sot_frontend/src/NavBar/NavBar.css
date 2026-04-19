@@ -1,28 +1,39 @@
-/* NAVBAR */
 .navbar {
   background: #081c32;
   color: hsl(247, 15%, 77%);
-  height: 100vh;
+
+  height: 100vh; /* 🔥 fixe */
+  width: 250px;
+
   padding: 10px;
 
-  
   display: flex;
   flex-direction: column;
 
+  position: fixed; /* 🔥 clé */
+  top: 0;
+  left: 0;
 
   transition: width 0.3s ease;
 }
 
-/* STATES */
 .navbar.open {
   width: 250px;
 }
+
+
 
 .navbar.closed {
   width: 80px;
 }
 
-/* HEADER (LOGO + BUTTON) */
+/* quand navbar fermée */
+.navbar.closed + .main-content {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+/* HEADER */
 .header {
   display: flex;
   align-items: center;
@@ -32,28 +43,47 @@
 
 /* LOGO */
 .logo {
-    /* background-color: #b01313; */
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 600; /* 🔥 moins agressif */
   white-space: nowrap;
 }
 
 /* TOGGLE BUTTON */
 .toggle-btn {
-  /* background-color: aqua; */
   cursor: pointer;
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* 🔥 ICON */
+.toggle-btn img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+/* rotation UNIQUEMENT quand open */
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* 🔥 hover SANS casser rotation */
+.toggle-btn img:hover {
+  scale: 1.15; /* 🔥 PAS transform */
+}
+
+.arrow.open:hover {
+  transform: rotate(180deg) scale(1.15);
+}
 /* TOP */
 .top {
-  /* background-color: rgb(2, 37, 26);   */
   width: 100%;
 }
 
 /* NAV LINKS */
 .nav-links {
-  /* background-color: rgb(212, 130, 23);   */
   list-style: none;
   padding: 0;
   margin: 0;
@@ -137,35 +167,13 @@
   display: none;
 }
 
-.toggle-btn img {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-/* rotation quand navbar ouverte */
-.arrow.open {
-  transform: rotate(180deg);
-}
-
-/* petit effet hover */
-.toggle-btn img:hover {
-  transform: scale(1.2);
-}
-/* ALIGNEMENT DU BOUTON EN MODE FERMÉ */
+/* 🔥 ALIGNEMENT HEADER */
 .navbar.closed .header {
   justify-content: center;
 }
 
-/* cacher le logo en mode fermé (déjà fait normalement) */
-.navbar.closed .logo {
-  display: none;
-}
-
-/* centrer le bouton */
+/* 🔥 CENTRER BOUTON */
 .navbar.closed .toggle-btn {
-  display: flex;
-  justify-content: center;
   width: 100%;
+  justify-content: center;
 }

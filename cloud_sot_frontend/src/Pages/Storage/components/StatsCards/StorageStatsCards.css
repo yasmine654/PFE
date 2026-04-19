@@ -1,0 +1,87 @@
+/* 🔥 Container */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin: 20px;
+}
+
+/* 🔥 Card */
+.card {
+  border-radius: 20px;
+  padding: 25px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: 150px;
+  min-height: 150px;
+
+  transition: all 0.3s ease;
+}
+
+/* hover */
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+
+/* top */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* titre */
+.card p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* valeur */
+.card h2 {
+  font-size: 36px;
+  margin-top: auto;
+  font-weight: 700;
+}
+
+/* icône */
+.card-icon {
+  font-size: 28px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* couleurs */
+.card.blue {
+  background: linear-gradient(135deg, #0b2145, #1e40ff);
+}
+
+.card.green {
+  background: linear-gradient(135deg, #10602d, #22ff77);
+}
+
+.card.orange {
+  background: linear-gradient(135deg, #7d0e0e, #ff3b3b);
+}
+
+.card.purple {
+  background: linear-gradient(135deg, #a0960f, #ffee00);
+}
+
+/* effet lumière */
+.card::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -30%;
+  width: 180px;
+  height: 180px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, Base
 
-# ✅ IMPORT MODELS (important pour create_all)
+# ✅ IMPORT MODELS
 from app.models import (
     tenant, provider, region, availability_zone,
     vpc, subnet, vm, vpc_peering,
@@ -11,7 +11,7 @@ from app.models import (
     volume, security_group, waf, account
 )
 
-# ✅ IMPORT ROUTERS (renommés pour éviter conflit)
+# ✅ IMPORT ROUTERS
 from app.api import tenant as tenant_api
 from app.api import provider as provider_api
 from app.api import account as account_api
@@ -30,16 +30,15 @@ from app.api import volume as volume_api
 from app.api import vpn_gateway as vpn_api
 from app.api import waf as waf_api
 from app.api import vip as vip_api
-
 from app.api.conflicts import router as conflict_router
 
 # 🔥 CREATE APP
 app = FastAPI(title="Cloud Source of Truth")
 
-# 🔥 CORS (IMPORTANT POUR FRONTEND REACT)
+# 🔥 CORS (version plus propre)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # en dev (plus tard on limite)
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,6 +51,7 @@ Base.metadata.create_all(bind=engine)
 @app.get("/")
 def root():
     return {"message": "Backend is running 🚀"}
+
 
 # ✅ INCLUDE ROUTERS
 app.include_router(tenant_api.router)

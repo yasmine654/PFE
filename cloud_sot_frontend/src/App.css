@@ -11,14 +11,24 @@
 }
 
 /* LAYOUT GLOBAL */
-.app-layout {
-  display: flex;
+html, body, #root {
+  height: 100%;
+  margin: 0;
 }
 
-/* CONTENU PRINCIPAL */
-.main-content {
-  flex: 1; /* prend tout l’espace restant */
-  /* padding: 20px; */
-  background-color: #f5f7fa;
+/* 🔥 LAYOUT PRINCIPAL */
+.app {
+  display: flex;
   min-height: 100vh;
+  /* background-color: blue; */
+}
+
+
+.main-content {
+  flex: 1;
+  /* background-color: aqua; */
+  width: calc(100% - 250px);
+  height: 100vh; /* 🔥 même hauteur écran */
+  overflow-y: auto; /* 🔥 scroll ici seulement */
+  background-color: #e4e6e9;
 }

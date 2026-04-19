@@ -1,0 +1,73 @@
+/* 🔥 Container */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin: 20px;
+}
+
+/* 🔥 Card */
+.card {
+  border-radius: 20px;
+  padding: 25px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  /* 🔥 LA CLÉ ICI */
+  height: 150px; /* taille FIXE */
+  min-height: 150px;
+
+  transition: all 0.3s ease;
+}
+
+/* hover */
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+
+/* 🔥 top */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 🔥 titre */
+.card p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* 🔥 valeur */
+.card h2 {
+  font-size: 36px;
+  margin-top: auto; /* 🔥 pousse en bas */
+  font-weight: 700;
+}
+
+/* 🔥 icône */
+.card-icon {
+  font-size: 28px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-icon {
+  font-size: 28px;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 12px;
+  border-radius: 14px;
+}

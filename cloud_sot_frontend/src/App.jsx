@@ -15,8 +15,8 @@ import FinOps from "./Pages/FinOps/FinOps";
 function App() {
   return (
     <Router>
-      <div className="app-layout">
-        <Navbar />
+      <div className="app">
+        <Navbar/>
 
         <div className="main-content">
           <Routes>
