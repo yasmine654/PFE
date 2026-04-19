@@ -6,12 +6,11 @@ class ACLBase(BaseModel):
 
     subnet_id: int
     direction: str
-    source_port: int
-    destination_port: int
+    source_port: Optional[int] = None          # 🔥
+    destination_port: Optional[int] = None     # 🔥
     source_ip: Optional[str] = None
     destination_ip: Optional[str] = None
     action: str
-
 
 class ACLCreate(ACLBase):
     pass

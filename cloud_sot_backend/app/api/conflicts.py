@@ -195,3 +195,68 @@ def get_misconfig_security(conflicts=Depends(get_security_data)):
         c for c in conflicts
         if c["type"] == "NO_SECURITY_GROUP"
     ]
+
+# =========================
+# 🔴 ACL ROUTES (FINAL CLEAN)
+# =========================
+
+# ALL ACL
+@router.get("/security/acl")
+def get_acl_conflicts(conflicts=Depends(get_security_data)):
+    return [
+        c for c in conflicts
+        if c["subcategory"] == "ACL"
+    ]
+
+
+# CRITICAL ONLY
+@router.get("/security/acl/critical")
+def get_acl_critical(conflicts=Depends(get_security_data)):
+    return [
+        c for c in conflicts
+        if c["subcategory"] == "ACL"
+        and c["severity"] == "CRITICAL"
+    ]
+
+
+# EXPOSED (internet)
+@router.get("/security/acl/exposed")
+def get_acl_exposed(conflicts=Depends(get_security_data)):
+    return [
+        c for c in conflicts
+        if c["subcategory"] == "ACL"
+        and c["type"] in [
+            "ACL_ALLOW_ALL_INBOUND",
+            "ACL_DANGEROUS_PORT_OPEN"
+        ]
+    ]
+
+
+# CONFLICT RULES
+@router.get("/security/acl/conflicts")
+def get_acl_conflict_rules(conflicts=Depends(get_security_data)):
+    return [
+        c for c in conflicts
+        if c["subcategory"] == "ACL"
+        and c["type"] == "ACL_CONFLICT_RULE"
+    ]
+
+
+# SHADOW RULES
+@router.get("/security/acl/shadow")
+def get_acl_shadow(conflicts=Depends(get_security_data)):
+    return [
+        c for c in conflicts
+        if c["subcategory"] == "ACL"
+        and c["type"] == "ACL_SHADOW_RULE"
+    ]
+
+
+# BLOCK ALL
+@router.get("/security/acl/block")
+def get_acl_block_all(conflicts=Depends(get_security_data)):
+    return [
+        c for c in conflicts
+        if c["subcategory"] == "ACL"
+        and c["type"] == "ACL_DENY_ALL_INBOUND"
+    ]
