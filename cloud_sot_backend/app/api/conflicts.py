@@ -12,7 +12,14 @@ router = APIRouter(prefix="/conflicts", tags=["Conflicts"])
 
 
 # =========================
-# 🔴 SECURITY DATA (DEPENDENCY)
+# 🔴 CACHE GLOBAL (ALL CONFLICTS)
+# =========================
+def get_all_conflicts_data(db: Session = Depends(get_db)):
+    return detect_all_conflicts(db)
+
+
+# =========================
+# 🔴 SECURITY DATA
 # =========================
 def get_security_data(db: Session = Depends(get_db)):
     return detect_security_conflicts(db)
@@ -22,8 +29,63 @@ def get_security_data(db: Session = Depends(get_db)):
 # 🔴 GLOBAL
 # =========================
 @router.get("")
-def get_all_conflicts(db: Session = Depends(get_db)):
-    return detect_all_conflicts(db)
+def get_all_conflicts(conflicts=Depends(get_all_conflicts_data)):
+    return conflicts
+
+
+# =========================
+# 🔴 CORRELATED ONLY
+# =========================
+@router.get("/correlated")
+def get_correlated_conflicts(conflicts=Depends(get_all_conflicts_data)):
+    return [
+        c for c in conflicts
+        if c.get("category") == "CORRELATED"
+    ]
+
+
+# =========================
+# 🔴 CORRELATED BY TYPE
+# =========================
+
+@router.get("/correlated/network-ip")
+def get_network_ip_conflicts(conflicts = Depends(get_all_conflicts_data)):
+    return [
+        c for c in conflicts
+        if c.get("type") == "CRITICAL_NETWORK_IP_CONFLICT"
+    ]
+
+
+@router.get("/correlated/routing")
+def get_routing_conflicts(conflicts = Depends(get_all_conflicts_data)):
+    return [
+        c for c in conflicts
+        if c.get("type") == "SUBNET_ROUTING_CONFLICT"
+    ]
+
+
+@router.get("/correlated/exposed-misconfig")
+def get_exposed_misconfig(conflicts = Depends(get_all_conflicts_data)):
+    return [
+        c for c in conflicts
+        if c.get("type") == "EXPOSED_MISCONFIGURED_VM"
+    ]
+
+
+@router.get("/correlated/exposed-duplicate")
+def get_exposed_duplicate(conflicts = Depends(get_all_conflicts_data)):
+    return [
+        c for c in conflicts
+        if c.get("type") == "CRITICAL_EXPOSED_DUPLICATE_VM"
+    ]
+
+
+@router.get("/correlated/vpc")
+def get_vpc_conflicts(conflicts = Depends(get_all_conflicts_data)):
+    return [
+        c for c in conflicts
+        if c.get("type") == "VPC_BOUNDARY_CONFLICT"
+    ]
 
 
 # =========================
@@ -94,25 +156,42 @@ def get_duplicate_ip_conflicts(db: Session = Depends(get_db)):
 # 🔴 SECURITY
 # =========================
 @router.get("/security")
-def get_security_conflicts(conflicts = Depends(get_security_data)):
+def get_security_conflicts(conflicts=Depends(get_security_data)):
     return conflicts
 
 
 @router.get("/security/public")
-def get_public_vm_conflicts(conflicts = Depends(get_security_data)):
+def get_public_vm_conflicts(conflicts=Depends(get_security_data)):
     return [
         c for c in conflicts
         if c["type"] in [
             "EXPOSED_VM",
             "CRITICAL_EXPOSED_VM",
-            "PUBLIC_WITHOUT_PROTECTION"
+            "PUBLIC_WITHOUT_PROTECTION",
+            "FULLY_EXPOSED_VM"
         ]
     ]
 
 
 @router.get("/security/critical")
-def get_critical_security_conflicts(conflicts = Depends(get_security_data)):
+def get_critical_security_conflicts(conflicts=Depends(get_security_data)):
     return [
         c for c in conflicts
         if c["severity"] == "CRITICAL"
+    ]
+
+
+@router.get("/security/sg")
+def get_sg_conflicts(conflicts=Depends(get_security_data)):
+    return [
+        c for c in conflicts
+        if c["type"] == "OVER_PERMISSIVE_SG"
+    ]
+
+
+@router.get("/security/misconfig")
+def get_misconfig_security(conflicts=Depends(get_security_data)):
+    return [
+        c for c in conflicts
+        if c["type"] == "NO_SECURITY_GROUP"
     ]

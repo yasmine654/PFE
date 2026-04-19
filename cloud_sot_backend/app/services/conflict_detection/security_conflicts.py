@@ -11,14 +11,14 @@ class ConflictDetectionError(Exception):
     pass
 
 
-DANGEROUS_PORTS = {22, 3389}
+DANGEROUS_PORTS = {22, 3389}  # SSH / RDP
 
 
 def detect_security_conflicts(db):
     conflicts = []
 
     # =========================
-    # 🔴 LOAD DATA + ERROR HANDLING
+    # 🔴 LOAD DATA
     # =========================
     try:
         vms = db.query(VM).all()
@@ -28,7 +28,7 @@ def detect_security_conflicts(db):
         raise ConflictDetectionError("DB unavailable") from e
 
     # =========================
-    # 🔴 BUILD SG MAP
+    # 🔴 BUILD MAP
     # =========================
     sg_map = defaultdict(list)
 
@@ -41,16 +41,28 @@ def detect_security_conflicts(db):
     for vm in vms:
 
         is_public = vm.elastic_ip_id is not None
+        rules = sg_map.get(vm.vm_id, [])
 
-        inbound_rules = [
-            sg for sg in sg_map.get(vm.vm_id, [])
-            if sg.direction == "inbound"
-        ]
-
-        open_ports = {sg.port for sg in inbound_rules}
+        inbound_rules = [r for r in rules if r.direction == "inbound"]
 
         # =========================
-        # 🔥 1. PUBLIC WITHOUT PROTECTION
+        # 🔥 1. NO SECURITY GROUP
+        # =========================
+        if not rules:
+            conflicts.append({
+                "category": "SECURITY",
+                "subcategory": "VM",
+                "type": "NO_SECURITY_GROUP",
+                "severity": "HIGH",
+                "resource": "VM",
+                "resource_id": vm.vm_id,
+                "message": f"VM {vm.name} has no security group",
+                "related_resources": []
+            })
+            continue
+
+        # =========================
+        # 🔥 2. PUBLIC WITHOUT PROTECTION
         # =========================
         if is_public and not inbound_rules:
             conflicts.append({
@@ -65,12 +77,40 @@ def detect_security_conflicts(db):
             })
             continue
 
-        # =========================
-        # 🔥 2. CRITICAL EXPOSED VM
-        # =========================
-        dangerous_open = open_ports.intersection(DANGEROUS_PORTS)
+        open_ports = set()
+        dangerous_ports = set()
+        open_to_world = False
 
-        if is_public and dangerous_open:
+        for r in inbound_rules:
+
+            open_ports.add(r.port)
+
+            if r.port in DANGEROUS_PORTS:
+                dangerous_ports.add(r.port)
+
+            if r.source == "0.0.0.0/0":
+                open_to_world = True
+
+        # =========================
+        # 🔥 3. FULLY EXPOSED VM
+        # =========================
+        if is_public and dangerous_ports and open_to_world:
+            conflicts.append({
+                "category": "SECURITY",
+                "subcategory": "VM",
+                "type": "FULLY_EXPOSED_VM",
+                "severity": "CRITICAL",
+                "resource": "VM",
+                "resource_id": vm.vm_id,
+                "message": f"Public VM {vm.name} fully exposed (dangerous ports + open to world)",
+                "related_resources": [vm.elastic_ip_id]
+            })
+            continue
+
+        # =========================
+        # 🔥 4. CRITICAL EXPOSED VM
+        # =========================
+        if is_public and dangerous_ports:
             conflicts.append({
                 "category": "SECURITY",
                 "subcategory": "VM",
@@ -78,13 +118,28 @@ def detect_security_conflicts(db):
                 "severity": "CRITICAL",
                 "resource": "VM",
                 "resource_id": vm.vm_id,
-                "message": f"Public VM {vm.name} exposes dangerous ports {list(dangerous_open)}",
-                "related_resources": [vm.elastic_ip_id] if vm.elastic_ip_id else []
+                "message": f"Public VM {vm.name} exposes dangerous ports {list(dangerous_ports)}",
+                "related_resources": [vm.elastic_ip_id]
             })
             continue
 
         # =========================
-        # 🔴 3. EXPOSED VM
+        # 🔥 5. OVER PERMISSIVE SG (ONLY INTERNAL)
+        # =========================
+        if open_to_world and not is_public:
+            conflicts.append({
+                "category": "SECURITY",
+                "subcategory": "SG",
+                "type": "OVER_PERMISSIVE_SG",
+                "severity": "HIGH",
+                "resource": "VM",
+                "resource_id": vm.vm_id,
+                "message": f"VM {vm.name} allows access from 0.0.0.0/0",
+                "related_resources": []
+            })
+
+        # =========================
+        # 🔴 6. EXPOSED VM
         # =========================
         if is_public:
             conflicts.append({
@@ -94,7 +149,7 @@ def detect_security_conflicts(db):
                 "severity": "MEDIUM",
                 "resource": "VM",
                 "resource_id": vm.vm_id,
-                "message": f"VM {vm.name} exposed to internet (Elastic IP attached)",
+                "message": f"VM {vm.name} exposed to internet",
                 "related_resources": [vm.elastic_ip_id]
             })
 
