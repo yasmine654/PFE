@@ -2,6 +2,7 @@ import Navbar from "./NavBar/Navbar";
 import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Compute from "./Pages/Compute/Compute";
@@ -13,12 +14,14 @@ import Anomalies from "./Pages/Anomalies/Anomalies";
 import FinOps from "./Pages/FinOps/FinOps";
 
 function App() {
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
     <Router>
       <div className="app">
-        <Navbar/>
+        <Navbar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-        <div className="main-content">
+        <div className={`main-content ${isOpen ? "nav-open" : "nav-closed"}`}>
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/compute" element={<Compute />} />
@@ -30,7 +33,6 @@ function App() {
             <Route path="/finops" element={<FinOps />} />
           </Routes>
         </div>
-
       </div>
     </Router>
   );

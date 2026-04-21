@@ -1,18 +1,20 @@
 .table-container {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden; /* 🔥 supprime le scrollbar horizontal */
   margin-top: 20px;
+  padding: 0 16px; /* 🔥 gap entre la table et les bords de la page */
 }
 
+
 table {
-  width: 98%;
+  width: 100%; /* 🔥 prend toute la largeur du container */
   border-collapse: separate;
   border-spacing: 0;
   font-size: 14px;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   overflow: hidden;
-  margin: 0px 14px;
+  margin: 0; /* 🔥 plus besoin du margin manuel */
 }
 
 thead tr {
@@ -45,7 +47,6 @@ td {
   padding: 14px 16px;
   vertical-align: middle;
   border-bottom: 1px solid #f0f0f0;
-  /* background-color: #1a9e5c; */
 }
 
 .vm-name {
@@ -58,13 +59,15 @@ td {
   color: #999;
 }
 
-/* état dans la TABLE — avec fond et bordure */
+/* état dans la TABLE */
 .status {
   padding: 4px 10px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 500;
   background-color: #d70000;
+  white-space: nowrap; /* 🔥 empêche le saut de ligne */
+  display: inline-block; /* 🔥 le cercle s'adapte au contenu sans s'étirer */
 }
 
 .status.running {
@@ -79,7 +82,7 @@ td {
   border: 1px solid #ff7979;
 }
 
-/* état dans la MODAL view — juste la couleur, pas de fond ni bordure */
+/* état dans la MODAL view */
 .status-text.running {
   color: #1a9e5c;
   font-size: 14px;
@@ -111,10 +114,9 @@ td {
 
 .action-icon {
   width: 20px;
-  height: 45PX;
+  height: 45px;
   object-fit: contain;
   cursor: pointer;
-  /* background-color: aqua; */
   opacity: 0.7;
 }
 
@@ -134,7 +136,6 @@ td {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  /* background-color: #d70000; */
 }
 
 /* MODAL VM */
@@ -175,14 +176,12 @@ td {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  /* background-color: #1a9e5c; */
 }
 
 .vm-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  /* background-color: #e07b00; */
 }
 
 .vm-field label {
@@ -190,30 +189,27 @@ td {
   color: #888;
   font-weight: 500;
   text-transform: uppercase;
-  /* background-color: #d70000; */
 }
 
-.vm-field input{
-  /* background-color: #1a9e5c; */
+.vm-field input {
   border: 1px solid;
   border-color: #c8c4c4;
   border-radius: 5px;
   padding: 5px;
 }
 
-.vm-field input:hover{
+.vm-field input:hover {
   border-color: #888;
 }
 
-.vm-field select{
-  /* background-color: #d70000; */
+.vm-field select {
   border: 1px solid;
   border-color: #c8c4c4;
   border-radius: 5px;
-  padding: 5px; 
+  padding: 5px;
 }
 
-.vm-field option{
+.vm-field option {
   border: 1px solid;
   border-color: #c8c4c4;
   border-radius: 5px;
