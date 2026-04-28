@@ -63,7 +63,7 @@ class VM(Base):
 
     elastic_ip = relationship(
         "ElasticIP",
-        back_populates="vms"
+        back_populates="vm"
     )
 
     volumes = relationship(

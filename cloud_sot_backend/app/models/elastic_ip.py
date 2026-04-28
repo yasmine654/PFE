@@ -14,6 +14,6 @@ class ElasticIP(Base):
     provider = relationship("Provider", back_populates="elastic_ips")
     region = relationship("Region", back_populates="elastic_ips")
 
-    vms = relationship("VM", back_populates="elastic_ip")
-    vpn_gateways = relationship("VPNGateway", back_populates="elastic_ip")
-    wafs = relationship("WAF", back_populates="elastic_ip")
+    vm = relationship("VM", back_populates="elastic_ip", uselist=False)
+    vpn_gateway = relationship("VPNGateway", back_populates="elastic_ip", uselist=False)
+    waf = relationship("WAF", back_populates="elastic_ip", uselist=False)

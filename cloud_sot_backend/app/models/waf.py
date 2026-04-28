@@ -21,5 +21,5 @@ class WAF(Base):
 
     elastic_ip = relationship(
         "ElasticIP",
-        back_populates="wafs"
+        back_populates="waf"
     )

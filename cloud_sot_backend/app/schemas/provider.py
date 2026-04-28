@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 class ProviderBase(BaseModel):
@@ -12,8 +13,6 @@ class ProviderResponse(ProviderBase):
     model_config = {
         "from_attributes": True
     }
-
-from typing import Optional
 
 class ProviderUpdate(BaseModel):
     name: Optional[str] = None

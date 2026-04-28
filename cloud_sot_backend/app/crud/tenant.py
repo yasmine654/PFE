@@ -3,7 +3,7 @@ from app.models.tenant import Tenant
 from app.schemas.tenant import TenantCreate
 
 def create_tenant(db: Session, tenant: TenantCreate):
-    db_tenant = Tenant(**tenant.dict())
+    db_tenant = Tenant(**tenant.model_dump())
     db.add(db_tenant)
     db.commit()
     db.refresh(db_tenant)
@@ -28,7 +28,7 @@ def update_tenant(db: Session, tenant_id: int, tenant_update):
     if not tenant:
         return None
 
-    for key, value in tenant_update.dict(exclude_unset=True).items():
+    for key, value in tenant_update.model_dump(exclude_unset=True).items():
         setattr(tenant, key, value)
 
     db.commit()

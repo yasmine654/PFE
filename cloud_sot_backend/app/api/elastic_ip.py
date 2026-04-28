@@ -24,10 +24,8 @@ def _to_response(eip: ElasticIP) -> ElasticIPResponse:
         ip=eip.ip,
         provider_id=eip.provider_id,
         region_id=eip.region_id,
-        is_attached=len(eip.vms) > 0,
-
-        # ✅ AJOUT
-        vm_id=eip.vms[0].vm_id if eip.vms else None
+        is_attached=eip.vm is not None,
+        vm_id=eip.vm.vm_id if eip.vm else None
     )
 
 @router.post("/", response_model=ElasticIPResponse)
@@ -58,7 +56,7 @@ def delete_elastic_ip(elastic_ip_id: int, db: Session = Depends(get_db)):
     ).first()
     if not eip:
         raise HTTPException(status_code=404, detail="Elastic IP not found")
-    if eip.vms:
+    if eip.vm:
         raise HTTPException(
             status_code=400,
             detail="Cannot delete EIP attached to a VM. Detach first or use /force."

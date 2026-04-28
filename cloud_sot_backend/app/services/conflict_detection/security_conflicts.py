@@ -46,16 +46,28 @@ def detect_security_conflicts(db):
         inbound_rules = [r for r in rules if r.direction == "inbound"]
 
         if not rules:
-            conflicts.append({
-                "category": "SECURITY",
-                "subcategory": "VM",
-                "type": "NO_SECURITY_GROUP",
-                "severity": "HIGH",
-                "resource": "VM",
-                "resource_id": vm.vm_id,
-                "message": f"VM {vm.name} has no security group",
-                "related_resources": []
-            })
+            if is_public:
+                conflicts.append({
+                    "category": "SECURITY",
+                    "subcategory": "VM",
+                    "type": "PUBLIC_WITHOUT_PROTECTION",
+                    "severity": "CRITICAL",
+                    "resource": "VM",
+                    "resource_id": vm.vm_id,
+                    "message": f"Public VM {vm.name} has no security group",
+                    "related_resources": [vm.elastic_ip_id]
+                })
+            else:
+                conflicts.append({
+                    "category": "SECURITY",
+                    "subcategory": "VM",
+                    "type": "NO_SECURITY_GROUP",
+                    "severity": "HIGH",
+                    "resource": "VM",
+                    "resource_id": vm.vm_id,
+                    "message": f"Private VM {vm.name} has no security group",
+                    "related_resources": []
+                })
             continue
 
         if is_public and not inbound_rules:
@@ -89,6 +101,7 @@ def detect_security_conflicts(db):
                 "severity": "CRITICAL",
                 "resource": "VM",
                 "resource_id": vm.vm_id,
+                "subnet_id": vm.subnet_id,
                 "message": f"Public VM {vm.name} fully exposed",
                 "related_resources": [vm.elastic_ip_id]
             })
@@ -102,6 +115,7 @@ def detect_security_conflicts(db):
                 "severity": "CRITICAL",
                 "resource": "VM",
                 "resource_id": vm.vm_id,
+                "subnet_id": vm.subnet_id,
                 "message": f"Public VM {vm.name} exposes dangerous ports {list(dangerous_ports)}",
                 "related_resources": [vm.elastic_ip_id]
             })
@@ -127,6 +141,7 @@ def detect_security_conflicts(db):
                 "severity": "MEDIUM",
                 "resource": "VM",
                 "resource_id": vm.vm_id,
+                "subnet_id": vm.subnet_id,
                 "message": f"VM {vm.name} exposed to internet",
                 "related_resources": [vm.elastic_ip_id]
             })

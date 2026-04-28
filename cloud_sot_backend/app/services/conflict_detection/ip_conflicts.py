@@ -107,7 +107,7 @@ def detect_ip_conflicts(db):
         try:
             net1 = ipaddress.ip_network(vm1.subnet.cidr, strict=False)
             net2 = ipaddress.ip_network(vm2.subnet.cidr, strict=False)
-        except:
+        except ValueError:
             continue
 
         if net1.overlaps(net2) and vm1.subnet_id != vm2.subnet_id:

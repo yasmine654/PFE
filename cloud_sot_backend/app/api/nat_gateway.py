@@ -86,16 +86,17 @@ def force_delete_nat_gateway(nat_id: int, db: Session = Depends(get_db)):
 @router.put("/{nat_id}", response_model=NATGatewayResponse)
 def update_nat_gateway(nat_id: int, nat_update: NATGatewayUpdate, db: Session = Depends(get_db)):
 
+    # ✅ VALIDATION AVANT UPDATE
     if nat_update.vpc_id is not None:
         validate_fk_exists(db, VPC, "VPC", nat_update.vpc_id)
+
+    if nat_update.subnet_id is not None:
+        validate_fk_exists(db, Subnet, "Subnet", nat_update.subnet_id)
 
     updated = crud_nat.update_nat_gateway(db, nat_id, nat_update)
 
     if not updated:
         raise HTTPException(status_code=404, detail="NAT Gateway not found")
-    
-    if nat_update.subnet_id is not None:
-       validate_fk_exists(db, Subnet, "Subnet", nat_update.subnet_id)
 
     return updated
 

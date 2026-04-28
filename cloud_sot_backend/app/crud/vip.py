@@ -4,7 +4,7 @@ from app.models.vip import VIP
 
 def create_vip(db: Session, vip):
 
-    db_vip = VIP(**vip.dict())
+    db_vip = VIP(**vip.model_dump())
     db.add(db_vip)
     db.commit()
     db.refresh(db_vip)
@@ -29,7 +29,7 @@ def update_vip(db: Session, vip_id: int, vip_update):
     if not vip:
         return None
 
-    update_data = vip_update.dict(exclude_unset=True)
+    update_data = vip_update.model_dump(exclude_unset=True)
 
     for key, value in update_data.items():
         setattr(vip, key, value)

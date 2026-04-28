@@ -15,8 +15,7 @@ class TenantResponse(TenantBase):
     tenant_id: int
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True}
 
 class TenantUpdate(BaseModel):
     name: Optional[str] = None

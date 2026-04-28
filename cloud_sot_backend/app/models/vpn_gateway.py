@@ -36,5 +36,5 @@ class VPNGateway(Base):
 
     elastic_ip = relationship(
         "ElasticIP",
-        back_populates="vpn_gateways"
+        back_populates="vpn_gateway"
     )
