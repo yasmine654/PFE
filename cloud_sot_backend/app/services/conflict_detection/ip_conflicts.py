@@ -24,7 +24,6 @@ def detect_ip_conflicts(db):
     vpc_ip_map = defaultdict(list)
 
     for vm in vms:
-
         if not vm.private_ip:
             continue
 
@@ -38,8 +37,25 @@ def detect_ip_conflicts(db):
                 "severity": "HIGH",
                 "resource": "VM",
                 "resource_id": vm.vm_id,
+                "primary_resource": {"type": "VM", "id": vm.vm_id},
+                "title": "Invalid private IP format",
                 "message": f"Invalid IP format: {vm.private_ip}",
-                "related_resources": [vm.vm_id]
+                "technical_summary": (
+                    f"VM {vm.vm_id} has private_ip='{vm.private_ip}', which is not a valid IPv4/IPv6 address."
+                ),
+                "impact": "network",
+                "recommendation": (
+                    "Correct the VM private IP value and ensure it belongs to the assigned subnet CIDR."
+                ),
+                "related_resources": [vm.vm_id],
+                "metadata": {
+                    "vm_id": vm.vm_id,
+                    "vm_name": getattr(vm, "name", None),
+                    "private_ip": vm.private_ip,
+                    "subnet_id": vm.subnet_id,
+                    "vpc_id": vm.vpc_id,
+                },
+                "confidence": "HIGH",
             })
             continue
 
@@ -49,12 +65,10 @@ def detect_ip_conflicts(db):
         if vm.vpc_id:
             vpc_ip_map[(vm.vpc_id, ip)].append(vm.vm_id)
 
-    # DUPLICATE SUBNET
     reported_subnet_conflicts = set()
 
     for (subnet_id, ip), vm_ids in subnet_ip_map.items():
         if len(vm_ids) > 1:
-
             key = (frozenset(vm_ids), ip)
             reported_subnet_conflicts.add(key)
 
@@ -65,14 +79,28 @@ def detect_ip_conflicts(db):
                 "severity": "CRITICAL",
                 "resource": "VM",
                 "resource_id": vm_ids[0],
+                "primary_resource": {"type": "VM", "id": vm_ids[0]},
+                "title": "Duplicate private IP inside same subnet",
                 "message": f"Duplicate IP {ip} in same subnet {subnet_id}",
+                "technical_summary": (
+                    f"Private IP {ip} is assigned to multiple VMs inside subnet {subnet_id}."
+                ),
+                "impact": "network",
+                "recommendation": (
+                    "Assign a unique private IP to each VM in the subnet. Check DHCP/IPAM allocation "
+                    "and update the duplicated VM records."
+                ),
                 "ip": ip,
-                "related_resources": vm_ids + [subnet_id]
+                "related_resources": vm_ids + [subnet_id],
+                "metadata": {
+                    "ip": ip,
+                    "subnet_id": subnet_id,
+                    "vm_ids": vm_ids,
+                },
+                "confidence": "HIGH",
             })
 
-    # DUPLICATE VPC
     for (vpc_id, ip), vm_ids in vpc_ip_map.items():
-
         if len(vm_ids) <= 1:
             continue
 
@@ -88,13 +116,27 @@ def detect_ip_conflicts(db):
             "severity": "HIGH",
             "resource": "VM",
             "resource_id": vm_ids[0],
+            "primary_resource": {"type": "VM", "id": vm_ids[0]},
+            "title": "Duplicate private IP inside same VPC",
             "message": f"Duplicate IP {ip} across VPC {vpc_id}",
-            "related_resources": vm_ids
+            "technical_summary": (
+                f"Private IP {ip} appears on multiple VMs within VPC {vpc_id}."
+            ),
+            "impact": "network",
+            "recommendation": (
+                "Review IP allocation inside the VPC and ensure each VM has a unique private IP."
+            ),
+            "ip": ip,
+            "related_resources": vm_ids,
+            "metadata": {
+                "ip": ip,
+                "vpc_id": vpc_id,
+                "vm_ids": vm_ids,
+            },
+            "confidence": "HIGH",
         })
 
-    # 🔥 DUPLICATE OVERLAP (IMPORTANT)
     for vm1, vm2 in combinations(vms, 2):
-
         if not vm1.private_ip or not vm2.private_ip:
             continue
 
@@ -111,7 +153,6 @@ def detect_ip_conflicts(db):
             continue
 
         if net1.overlaps(net2) and vm1.subnet_id != vm2.subnet_id:
-
             conflicts.append({
                 "category": "NETWORK",
                 "subcategory": "IP",
@@ -119,14 +160,33 @@ def detect_ip_conflicts(db):
                 "severity": "CRITICAL",
                 "resource": "VM",
                 "resource_id": vm1.vm_id,
+                "primary_resource": {"type": "VM", "id": vm1.vm_id},
+                "title": "Duplicate private IP across overlapping subnets",
                 "message": f"Same IP {vm1.private_ip} used in overlapping subnets",
+                "technical_summary": (
+                    f"VM {vm1.vm_id} and VM {vm2.vm_id} use the same private IP "
+                    f"{vm1.private_ip} while their subnets overlap "
+                    f"({vm1.subnet.cidr} and {vm2.subnet.cidr})."
+                ),
+                "impact": "network",
+                "recommendation": (
+                    "Resolve the subnet overlap or reassign one of the duplicated VM IPs. "
+                    "Do not keep identical addresses in overlapping routing domains."
+                ),
                 "ip": vm1.private_ip,
                 "related_resources": [
                     vm1.vm_id,
                     vm2.vm_id,
                     vm1.subnet_id,
-                    vm2.subnet_id
-                ]
+                    vm2.subnet_id,
+                ],
+                "metadata": {
+                    "ip": vm1.private_ip,
+                    "vm_ids": [vm1.vm_id, vm2.vm_id],
+                    "subnet_ids": [vm1.subnet_id, vm2.subnet_id],
+                    "subnet_cidrs": [vm1.subnet.cidr, vm2.subnet.cidr],
+                },
+                "confidence": "HIGH",
             })
 
     return conflicts
